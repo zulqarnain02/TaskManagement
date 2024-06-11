@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Task Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+      }
+      #task-header {
+        background: #005f73;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-content {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      h1 {
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 10px 0;
+      }
+      .btn {
+        text-decoration: none;
+        color: #fff;
+        background: #333;
+        padding: 15px 25px;
+        border-radius: 5px;
+        margin: 3% auto 1% 8%;
+        font-size: 1.2em;
+      }
+      .btn:hover {
+        background: #555;
+      }
+      table {
+        width: 100%;
+        margin-top: 20px;
+        border: 4px solid black;
+        border-radius: 10px;
+      }
+      table th,
+      table td {
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+        border-bottom: 1px solid #ddd;
+      }
+      table td {
+        color: black;
+      }
+      table th {
+        background: #333;
+        color: #fff;
+      }
+      .actions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .actions .btn {
+        padding: 5px;
+        border: none;
+        background: none;
+        color: inherit;
+        cursor: pointer;
+      }
+      .actions .btn i {
+        font-size: 1em;
+        padding: 1px;
+      }
+      .actions .btn.edit {
+        color: blue;
+      }
+      .actions .btn.delete {
+        color: red;
+      }
+      .actions .btn.view {
+        color: green;
+      }
+      /* Modal Enhancements */
+      .modal-content {
+        border-radius: 10px;
+      }
+      .modal-header {
+        background-color: #005f73;
+        color: white;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+      .modal-title {
+        font-weight: bold;
+        align-content: center;
+      }
+      .modal-body {
+        background-color: #f9f9f9;
+        padding: 20px;
+      }
+      .modal-footer {
+        background-color: #f9f9f9;
+        border-top: none;
+        display: flex;
+        justify-content: flex-end; /* Aligns the buttons to the right */
+      }
+      .form-control {
+        border-radius: 5px;
+      }
+      .btn-close {
+        color: white;
+        opacity: 1;
+      }
+      .btn-primary {
+        background-color: #005f73;
+        border-color: #005f73;
+        width: 90px;
+        height: 45px;
+        color: white;
+        border-radius: 3px;
+      }
+      .btn-primary:hover {
+        background-color: #014f63;
+        border-color: #014f63;
+      }
+      .btn-secondary {
+        background-color: #333;
+        border-color: #333;
+        width: 90px;
+        height: 45px;
+        color: white;
+        border-radius: 3px;
+      }
+      .btn-secondary:hover {
+        background-color: #555;
+        border-color: #555;
+      }
+      .form-label {
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        table thead {
+          display: none;
+        }
+        table,
+        table tbody,
+        table tr,
+        table td {
+          display: block;
+          width: 100%;
+        }
+        table tr {
+          margin-bottom: 15px;
+        }
+        table td {
+          text-align: right;
+          padding-left: 50%;
+          position: relative;
+        }
+        table td::before {
+          content: attr(data-title);
+          position: absolute;
+          left: 10px;
+          width: calc(50% - 20px);
+          padding-right: 10px;
+          text-align: left;
+          font-weight: bold;
+        }
+
+        .actions .btn {
+          margin: 3px;
+          padding: 2px;
+          float: right;
+          border: none;
+          background: none;
+          color: inherit;
+          cursor: pointer;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="task-header">
+      <div class="header-content">
+        <a
+          href="#"
+          class="btn"
+          data-bs-toggle="modal"
+          data-bs-target="#taskModal"
+          >Assign New Task</a
+        >
+      </div>
+      <h1>Task Management Section</h1>
+    </div>
+    <div class="container">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Task Title</th>
+            <th>Assigned To</th>
+            <th>Start Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in tasks %}
+          <tr>
+            <td data-title="Serial No">{{ forloop.counter }}</td>
+            <td data-title="title">{{ task.title }}</td>
+            <td data-title="Assign To">{{ task.assignto }}</td>
+            <td data-title="start Date">{{ task.startdate }}</td>
+            <td data-title="Due Date" data-due="{{ task.duedate }}">
+              {{ task.duedate }}
+            </td>
+            <td data-title="Status">{{ task.status }}</td>
+            <td data-title="Actions" class="actions">
+              <button
+                class="btn edit"
+                title="Edit"
+                onclick="openModifyTaskModal('{{ task.taskid }}', '{{ task.title }}', '{{ task.assignto }}', '{{ task.duedate }}', '{{ task.description }}', '{{ task.status }}')"
+                data-bs-toggle="modal"
+                data-bs-target="#modifytaskModal"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button
+                class="btn delete"
+                title="Delete"
+                onclick="deleteTask('{{ task.taskid }}')"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+              <button
+                class="btn view"
+                title="View"
+                onclick="viewTaskDetails('{{ task.taskid }}')"
+              >
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7">No tasks found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Assign new task Modal -->
+    <div
+      class="modal fade"
+      id="taskModal"
+      tabindex="-1"
+      aria-labelledby="taskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="taskModalLabel">Assign New Task</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="taskForm">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="taskTitle" class="form-label">Task Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="taskTitle"
+                  name="title"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="assignedTo" class="form-label">Assigned To</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="assignedTo"
+                  name="assignto"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="dueDate" class="form-label">Due Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dueDate"
+                  name="duedate"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  name="description"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" class="btn-primary" id="addTaskButton">
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modify Task Modal -->
+    <div
+      class="modal fade"
+      id="modifytaskModal"
+      tabindex="-1"
+      aria-labelledby="taskModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="taskModalLabel">Modify Task</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="modifyTaskForm">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="modifyTaskTitle" class="form-label"
+                  >Task Title</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="modifyTaskTitle"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="modifyAssignedTo" class="form-label"
+                  >Assigned To</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="modifyAssignedTo"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="modifyDueDate" class="form-label">Due Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="modifyDueDate"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="modifyDescription" class="form-label"
+                  >Description</label
+                >
+                <textarea
+                  class="form-control"
+                  id="modifyDescription"
+                  rows="3"
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="modifyStatus" class="form-label">Status</label>
+                <select class="form-control" id="modifyStatus" required>
+                  <option value="Pending">Pending</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+              <input type="hidden" id="modifyTaskId" />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" data-bs-dismiss="modal">
+              Close
+            </button>
+            <button type="button" class="btn-primary" onclick="modifyTask()">
+              Modify
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      //give colors to due date column
+      document.addEventListener("DOMContentLoaded", function () {
+        styleDueDates();
+      });
+
+      function styleDueDates() {
+        const currentDate = new Date();
+
+        document.querySelectorAll("td[data-due]").forEach((td) => {
+          const dueDate = new Date(td.getAttribute("data-due"));
+          const timeDiff = dueDate - currentDate;
+          const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+          if (dayDiff <= 5) {
+            td.style.color = "red";
+          } else if (dayDiff <= 20) {
+            td.style.color = "yellow";
+          } else {
+            td.style.color = "green";
+          }
+        });
+      }
+      //script to add new task
+      document
+        .getElementById("addTaskButton")
+        .addEventListener("click", function () {
+          var form = document.getElementById("taskForm");
+          var formData = new FormData(form);
+
+          fetch("{% url 'add_task' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+              "X-CSRFToken": "{{ csrf_token }}",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // Close modal
+                var taskModal = new bootstrap.Modal(
+                  document.getElementById("taskModal")
+                );
+                taskModal.hide();
+
+                // Reload page to see new task or update the DOM to show the new task
+                window.location.reload();
+              } else {
+                alert("Failed to add task. Please try again.");
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+
+      //automatically filled details in modifyModel
+      function openModifyTaskModal(
+        taskId,
+        title,
+        assignto,
+        duedate,
+        description,
+        status
+      ) {
+        document.getElementById("modifyTaskId").value = taskId;
+        document.getElementById("modifyTaskTitle").value = title;
+        document.getElementById("modifyAssignedTo").value = assignto;
+        document.getElementById("modifyDueDate").value =
+          formatDateForInput(duedate);
+        document.getElementById("modifyDescription").value = description;
+        document.getElementById("modifyStatus").value = status;
+        var modifyTaskModal = new bootstrap.Modal(
+          document.getElementById("modifytaskModal")
+        );
+        modifyTaskModal.show();
+      }
+
+      //this function is to make the dueDate formated to automaticalley filled in modify model
+      function formatDateForInput(dateString) {
+        var date = new Date(dateString);
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding leading zero
+        var day = ("0" + date.getDate()).slice(-2); // Adding leading zero
+        return year + "-" + month + "-" + day;
+      }
+
+      //modify the row in table home page function
+      function modifyTask() {
+        var taskId = document.getElementById("modifyTaskId").value;
+        var title = document.getElementById("modifyTaskTitle").value;
+        var assignto = document.getElementById("modifyAssignedTo").value;
+        var duedate = document.getElementById("modifyDueDate").value;
+        var description = document.getElementById("modifyDescription").value;
+        var status = document.getElementById("modifyStatus").value;
+
+        fetch("{% url 'modify_task' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            id: taskId,
+            title: title,
+            assignto: assignto,
+            duedate: duedate,
+            description: description,
+            status: status,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.reload();
+            } else {
+              alert("Failed to modify task. Please try again.");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      //to delete the task from the table
+      function deleteTask(taskId) {
+        if (confirm("Are you sure you want to delete this task?")) {
+          fetch("{% url 'delete_task' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": "{{ csrf_token }}",
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({ id: taskId }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                // Reload the page or remove the row from the DOM
+                window.location.reload();
+              } else {
+                alert("Failed to delete task. Please try again.");
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        }
+      }
+
+      //function to transfer the taskid to display the details of particluar row
+      function viewTaskDetails(taskId) {
+        window.location.href = "/details/" + taskId; // Redirect to the details page with the task ID
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
