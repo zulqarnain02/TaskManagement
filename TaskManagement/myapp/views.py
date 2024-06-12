@@ -4,12 +4,20 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.utils.timezone import now
 
+
+
 def home(request):
     tasks = Task.objects.all()  # Fetch all tasks
     return render(request, 'home.html', {'tasks': tasks})
 
-def Details(request):
-    return render(request, 'Details.html')
+
+def Details(request, task_id):
+    try:
+        task = Task.objects.get(taskid=task_id)
+        return render(request, 'Details.html', {'task': task})
+    except Task.DoesNotExist:
+        return render(request, 'error.html', {'message': 'Task not found'})
+
 
 
 def add_task(request):
@@ -32,6 +40,7 @@ def add_task(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
 
 
 def modify_task(request):
@@ -59,6 +68,7 @@ def modify_task(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
+
 def delete_task(request):
     if request.method == 'POST':
         task_id = request.POST.get('id')
@@ -74,9 +84,5 @@ def delete_task(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-def Details(request, task_id):
-    try:
-        task = Task.objects.get(taskid=task_id)
-        return render(request, 'Details.html', {'task': task})
-    except Task.DoesNotExist:
-        return render(request, 'error.html', {'message': 'Task not found'})
+
+

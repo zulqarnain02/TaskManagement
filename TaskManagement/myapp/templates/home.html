@@ -159,6 +159,25 @@
         font-weight: bold;
       }
 
+      #hello {
+        background-color: #005f73;
+        color: white;
+      }
+
+      #menubtn {
+        background-color: #005f73;
+      }
+
+      #navbarmenu {
+        background-color: #005f73;
+        margin-top: -50px; /* Move the button up */
+        padding: 15px 20px; /* Increase the size */
+        font-size: 1.2em; /* Increase font size */
+      }
+      #navbarmenu button{
+        border-radius: 7px;
+      }
+
       @media (max-width: 768px) {
         table thead {
           display: none;
@@ -202,23 +221,39 @@
           color: #fff;
           background: #333;
           padding: 10px 10px;
-        border-radius: 5px;
-        margin: 3% auto 1% 8%;
-        font-size: 1.2em;
+          border-radius: 5px;
+          margin: 3% auto 1% 8%;
+          font-size: 1.2em;
         }
 
         h1 {
-        width: 100%;
-        text-align: center;
-        margin: 0;
-        padding: 10px 0;
-      }
+          width: 100%;
+          text-align: center;
+          margin: 0;
+          padding: 10px 0;
+        }
       }
     </style>
   </head>
   <body>
     <div id="task-header">
       <div class="header-content">
+        <!-- Navbar copied from menu.html -->
+        <nav class="navbar navbar-light">
+          <div class="container-fluid" id="navbarmenu">
+            <button
+              class="btn-outline-primary"
+              id="menubtn"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasExample"
+              aria-controls="offcanvasExample"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </nav>
+        <!-- End of navbar -->
         <a
           href="#"
           class="btn"
@@ -287,6 +322,30 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Offcanvas Menu -->
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="offcanvasExample"
+      aria-labelledby="offcanvasExampleLabel"
+    >
+      <div class="offcanvas-header" id="hello">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <button class="btn-info w-100 mb-2" type="button">Profile</button>
+        <button class="btn-success w-100 mb-2" type="button">Login</button>
+        <button class="btn-danger w-100" type="button">Logout</button>
+      </div>
+    </div>
+    <!-- End of Offcanvas Menu -->
 
     <!-- Assign new task Modal -->
     <div
@@ -379,7 +438,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="taskModalLabel">Modify Task</h5>
+            <h5 class="modal-title" id="modifyTaskModalLabel">Modify Task</h5>
             <button
               type="button"
               class="btn-close"
