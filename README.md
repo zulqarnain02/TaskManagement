@@ -21,11 +21,23 @@ A Django-based web application for managing tasks efficiently. This system allow
 
 ## 📸 Screenshots
 
-[Add screenshots of your application here]
 - 📊 Dashboard
+  ![image](https://github.com/user-attachments/assets/aeed8691-f1bf-4ad4-92ae-788f37f355fc)
+
 - ➕ Task Creation Form
+  ![image](https://github.com/user-attachments/assets/266e50a0-9638-4fa2-a491-b2c971bfee08)
+  
+- ✍️ Edit Existing Task
+  ![image](https://github.com/user-attachments/assets/ae7b6e9c-bf0a-4792-b064-432f8cc1dce9)
+
+- ✂️ Delete Existing Task
+  ![image](https://github.com/user-attachments/assets/abdefd1d-efce-4e51-9dd2-a21e13abf45f)
+
 - 📋 Task List View
+  ![image](https://github.com/user-attachments/assets/3c0dfdd6-f27f-48b7-b151-6dfd6420506a)
+
 - 🔍 Task Details Page
+  ![image](https://github.com/user-attachments/assets/76c631d8-1d15-492e-bd8d-e7989923d2b3)
 
 ## ⚙️ Installation
 
